@@ -128,75 +128,83 @@ Consultas com Múltiplos Critérios e Filtros Compostos: O PagamentoRepository p
 Respostas Agregadas ou Combinadas: O TreinoRepository utiliza JOINs complexos para retornar uma lista de Treinos (entidade principal) filtrada por um atributo de uma entidade aninhada (Exercicio), como buscar treinos que contenham o exercício 'Supino'.
 
 ## 5. Exemplos de Uso e Chamadas de API (Endpoints Chave)
+
 A aplicação é executada na porta 8080.
 
-A. Criar Treino Transacional (Processo Composto)
-Endpoint: POST /api/treinos/com-exercicios
+### A. Criar Treino Transacional (Processo Composto)
 
-Descrição: Testa a atomicidade da transação ao criar o Treino (ID 501) e seus itens de exercício de uma só vez, usando os dados do data.sql.
+**Endpoint:** `POST /api/treinos/com-exercicios`
 
-Exemplo de JSON de Requisição:
+**Descrição:** Testa a atomicidade da transação ao criar o Treino (ID 501) e seus itens de exercício de uma só vez, usando os dados do `data.sql`.
 
-```mermaid
-JSON
+**Exemplo de JSON de Requisição:**
 
+\`\`\`json
 {
-"nome": "Treino Exemplo Final",
-"dataCriacao": "2025-11-09",
-"dataValidade": "2026-03-01",
-"tipo": "MUSCULACAO",
-"ativo": true,
-"aluno": { "id": 201 },
-"instrutor": { "id": 101 },
-"exercicios": [
-{
-"series": 4, "repeticoes": 10, "cargaEstimada": 90.0,
-"exercicio": { "id": 401 }
+  "nome": "Treino Exemplo Final",
+  "dataCriacao": "2025-11-09",
+  "dataValidade": "2026-03-01",
+  "tipo": "MUSCULACAO",
+  "ativo": true,
+  "aluno": { "id": 201 },
+  "instrutor": { "id": 101 },
+  "exercicios": [
+    {
+      "series": 4,
+      "repeticoes": 10,
+      "cargaEstimada": 90.0,
+      "exercicio": { "id": 401 }
+    }
+  ]
 }
-]
-}
-```
+\`\`\`
 
-B. Consulta com Agregação (Cálculo)
-Endpoint: 
-```mermaid
+### B. Consulta com Agregação (Cálculo)
+
+**Endpoint:**
+
+\`\`\`http
 GET /api/pagamentos/total-recebido
-```
+\`\`\`
 
-Parâmetros: inicio, fim (no formato YYYY-MM-DD).
+**Parâmetros:** `inicio`, `fim` (no formato `YYYY-MM-DD`).
 
-Exemplo de Chamada: 
+**Exemplo de Chamada:**
 
-```mermaid
+\`\`\`http
 GET /api/pagamentos/total-recebido?inicio=2025-10-01&fim=2025-11-30
-```
+\`\`\`
 
-C. Consulta Combinada (Filtro por Junção)
-Endpoint: 
+### C. Consulta Combinada (Filtro por Junção)
 
-```mermaid
+**Endpoint:**
+
+\`\`\`http
 GET /api/treinos/buscar-por-exercicio
-```
+\`\`\`
 
-Parâmetro: nome (parte do nome do exercício).
+**Parâmetro:** `nome` (parte do nome do exercício).
 
-Exemplo de Chamada: 
+**Exemplo de Chamada:**
 
-```mermaid
+\`\`\`http
 GET /api/treinos/buscar-por-exercicio?nome=Supino
-```
+\`\`\`
 
 ## 6. Instruções de Execução
-Configuração do Banco: Garanta que o arquivo src/main/resources/application.properties contenha as seguintes linhas para que o data.sql seja executado após a criação das tabelas:
 
-```mermaid
-Properties
+**Configuração do Banco:** Garanta que o arquivo `src/main/resources/application.properties` contenha as seguintes linhas para que o `data.sql` seja executado após a criação das tabelas:
 
+\`\`\`properties
 spring.jpa.hibernate.ddl-auto=create-drop
 spring.jpa.defer-datasource-initialization=true
-```
+\`\`\`
 
-Dados Iniciais: O arquivo src/main/resources/data.sql será executado automaticamente na inicialização para popular todas as tabelas (Planos, Alunos, Instrutores, etc.) com IDs fixos para garantir a integridade referencial.
+**Dados Iniciais:** O arquivo `src/main/resources/data.sql` será executado automaticamente na inicialização para popular todas as tabelas (Planos, Alunos, Instrutores, etc.) com IDs fixos para garantir a integridade referencial.
+
+**Execução:** Compile e execute a aplicação (ex: `mvn spring-boot:run`).
+
+**Teste:** Utilize o H2 Console ou ferramentas como Postman/Insomnia para testar os endpoints acima.
 
 Execução: Compile e execute a aplicação (ex: mvn spring-boot:run).
 
